@@ -20,13 +20,13 @@ namespace IdentityServer4Empty
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
             // configure identity server with in-memory stores, keys, clients and resources
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApis())
                 .AddInMemoryClients(Config.GetClients())
                 .AddTestUsers(Config.GetUsers());
-
             if (Environment.IsDevelopment())
             {
                 builder.AddDeveloperSigningCredential();
@@ -45,6 +45,8 @@ namespace IdentityServer4Empty
             }
 
             app.UseIdentityServer();
+            app.UseStaticFiles();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
