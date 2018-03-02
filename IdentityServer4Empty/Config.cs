@@ -17,6 +17,7 @@ namespace IdentityServer4Empty
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
+                new CustomScope()
             };
         }
 
@@ -77,6 +78,7 @@ namespace IdentityServer4Empty
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        "customscope"
                     }
                 }
             };
