@@ -3,6 +3,8 @@
 
 
 using System;
+using IdentityServer4;
+using IdentityServer4.Quickstart.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +23,13 @@ namespace IdentityServer4Empty
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            // configure identity server with in-memory stores, keys, clients and resources
+            // configure identity server with in-memory stores, keys, clients and resources/scpoes
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApis())
                 .AddInMemoryClients(Config.GetClients())
-                .AddTestUsers(Config.GetUsers());
+                .AddTestUsers(TestUsers.Users);
+            //.AddTestUsers(Config.GetUsers());
             if (Environment.IsDevelopment())
             {
                 builder.AddDeveloperSigningCredential();
@@ -35,6 +38,8 @@ namespace IdentityServer4Empty
             {
                 throw new Exception("need to configure key material");
             }
+
+            
         }
 
         public void Configure(IApplicationBuilder app)

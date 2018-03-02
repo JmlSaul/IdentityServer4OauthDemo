@@ -5,6 +5,7 @@
 using IdentityServer4.Models;
 using System.Collections.Generic;
 using IdentityServer4.Test;
+using IdentityServer4;
 
 namespace IdentityServer4Empty
 {
@@ -14,13 +15,14 @@ namespace IdentityServer4Empty
         {
             return new IdentityResource[]
             {
-                new IdentityResources.OpenId()
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
             };
         }
 
         public static IEnumerable<ApiResource> GetApis()
         {
-            return new ApiResource[]
+            return new[]
             {
                 new ApiResource("api1", "My API")
             };
@@ -28,7 +30,7 @@ namespace IdentityServer4Empty
 
         public static IEnumerable<Client> GetClients()
         {
-            return new Client[]
+            return new[]
             {
                 new Client
                 {
@@ -44,7 +46,7 @@ namespace IdentityServer4Empty
                     },
 
                     // scopes that client has access to
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = {"api1"}
                 },
                 // resource owner password grant client
                 new Client
@@ -56,7 +58,26 @@ namespace IdentityServer4Empty
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = {"api1"}
+                },
+                //OpenID Connect implict flow client (MVC)
+                new Client
+                {
+                    ClientId = "mvc",
+                    ClientName = "MVC Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+
+                    //where to redirect to after login
+                    RedirectUris = {"http://localhost:5002/signin-oidc"},
+
+                    //where to redirect to after logout
+                    PostLogoutRedirectUris = {"http://localhost:5002/signout-callback-oidc"},
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                    }
                 }
             };
         }
