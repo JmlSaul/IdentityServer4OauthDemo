@@ -1,0 +1,15 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/ConsoleClient/bin/Debug/netcoreapp2.0
+/ConsoleClient/obj
+/IdentityServer4Empty/tempkey.rsa
+/IdentityServer4Empty/obj
+/IdentityServer4Empty/identityserver4_log.txt
+/IdentityServer4Empty/bin/Debug/netcoreapp2.0
+/Mvc/obj
+/Mvc/bin/Debug/netcoreapp2.0
+/WebApi/obj
+/WebApi/bin/Debug/netcoreapp2.0
+/.vs/IdentityServer4Empty/v15/Server/sqlite3
