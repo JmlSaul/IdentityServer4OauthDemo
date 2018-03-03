@@ -13,3 +13,5 @@
 /WebApi/obj
 /WebApi/bin/Debug/netcoreapp2.0
 /.vs/IdentityServer4Empty/v15/Server/sqlite3
+/IdentityServerAspWithNetIdentity/bin/Debug/netcoreapp2.0
+/IdentityServerAspWithNetIdentity/obj
