@@ -39,7 +39,15 @@ namespace IdentityServer4Empty
                 throw new Exception("need to configure key material");
             }
 
-            
+            //add google
+            services.AddAuthentication()
+                .AddGoogle("Google", options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = "434483408261-55tc8n0cs4ff1fe21ea8df2o443v2iuc.apps.googleusercontent.com";
+                    options.ClientSecret = "3gcoTrEDPPJ0ukn_aYYT6PWo";
+                });
         }
 
         public void Configure(IApplicationBuilder app)

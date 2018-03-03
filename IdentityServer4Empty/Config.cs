@@ -61,12 +61,34 @@ namespace IdentityServer4Empty
                     },
                     AllowedScopes = {"api1"}
                 },
+                ////OpenID Connect implict flow client (MVC)
+                //new Client
+                //{
+                //    ClientId = "mvc",
+                //    ClientName = "MVC Client",
+                //    AllowedGrantTypes = GrantTypes.Implicit,
+
+                //    //where to redirect to after login
+                //    RedirectUris = {"http://localhost:5002/signin-oidc"},
+
+                //    //where to redirect to after logout
+                //    PostLogoutRedirectUris = {"http://localhost:5002/signout-callback-oidc"},
+
+                //    AllowedScopes = new List<string>
+                //    {
+                //        IdentityServerConstants.StandardScopes.OpenId,
+                //        IdentityServerConstants.StandardScopes.Profile,
+                //        "customscope"
+                //    }
+                //},
                 //OpenID Connect implict flow client (MVC)
                 new Client
                 {
                     ClientId = "mvc",
                     ClientName = "MVC Client",
-                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+
+                    ClientSecrets = {new Secret("secret".Sha256())},
 
                     //where to redirect to after login
                     RedirectUris = {"http://localhost:5002/signin-oidc"},
@@ -78,8 +100,10 @@ namespace IdentityServer4Empty
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "customscope"
-                    }
+                        "customscope",
+                        "api1"
+                    },
+                    AllowOfflineAccess = true
                 }
             };
         }
