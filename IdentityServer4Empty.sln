@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvc", "Mvc\Mvc.csproj", "{6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServerAspWithNetIdentity", "IdentityServerAspWithNetIdentity\IdentityServerAspWithNetIdentity.csproj", "{5AAB808A-13AE-4F77-B44B-A5BD3FF16049}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptClient", "JavaScriptClient\JavaScriptClient.csproj", "{5AD09987-FCEB-4C6C-98DE-ABC3F0A4B899}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{5AAB808A-13AE-4F77-B44B-A5BD3FF16049}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AAB808A-13AE-4F77-B44B-A5BD3FF16049}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AAB808A-13AE-4F77-B44B-A5BD3FF16049}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AD09987-FCEB-4C6C-98DE-ABC3F0A4B899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AD09987-FCEB-4C6C-98DE-ABC3F0A4B899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AD09987-FCEB-4C6C-98DE-ABC3F0A4B899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AD09987-FCEB-4C6C-98DE-ABC3F0A4B899}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
