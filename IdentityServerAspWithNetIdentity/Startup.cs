@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,8 +28,11 @@ namespace IdentityServerAspWithNetIdentity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            Action<DbContextOptionsBuilder> dbOption = options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    sql => sql.MigrationsAssembly(GetType().Assembly.GetName().Name));
+
+            services.AddDbContext<ApplicationDbContext>(dbOption);
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -41,10 +46,21 @@ namespace IdentityServerAspWithNetIdentity
             // configure identity server with in-memory stores, keys, clients and scopes
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
-                .AddInMemoryPersistedGrants()
-                .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
+//                .AddInMemoryPersistedGrants()
+//                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+//                .AddInMemoryApiResources(Config.GetApiResources())
+//                .AddInMemoryClients(Config.GetClients())
+                // this adds the config data from DB (clients, resources)
+                .AddConfigurationStore(builder => builder.ConfigureDbContext = dbOption)
+                // this adds the operational data from DB (codes, tokens, consents)
+                .AddOperationalStore(builder =>
+                {
+                    builder.ConfigureDbContext = dbOption;
+
+                    // this enables automatic token cleanup. this is optional.
+                    builder.EnableTokenCleanup = true;
+                    builder.TokenCleanupInterval = 30;
+                })
                 .AddAspNetIdentity<ApplicationUser>();
         }
 
@@ -73,6 +89,48 @@ namespace IdentityServerAspWithNetIdentity
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+//            InitializeDatabase(app);
+        }
+
+        private void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
+                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+                context.Database.Migrate();
+                if (!context.Clients.Any())
+                {
+                    foreach (var client in Config.GetClients())
+                    {
+                        context.Clients.Add(client.ToEntity());
+                    }
+
+                    context.SaveChanges();
+                }
+
+                if (!context.IdentityResources.Any())
+                {
+                    foreach (var resource in Config.GetIdentityResources())
+                    {
+                        context.IdentityResources.Add(resource.ToEntity());
+                    }
+
+                    context.SaveChanges();
+                }
+
+                if (!context.ApiResources.Any())
+                {
+                    foreach (var resource in Config.GetApiResources())
+                    {
+                        context.ApiResources.Add(resource.ToEntity());
+                    }
+
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }

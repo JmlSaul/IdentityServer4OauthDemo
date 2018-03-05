@@ -14,78 +14,77 @@ using IdentityServerAspWithNetIdentity.Models;
 using IdentityServerAspWithNetIdentity.Models.AccountViewModels;
 using IdentityServerAspWithNetIdentity.Services;
 
-namespace IdentityServerAspWithNetIdentity.Controllers
+namespace IdentityServer4.Quickstart.UI
 {
-    [Authorize]
     [Route("[controller]/[action]")]
-    public class AccountController : Controller
+    public partial class AccountController// : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
-
-        public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender,
-            ILogger<AccountController> logger)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
-            _logger = logger;
-        }
+//        private readonly UserManager<ApplicationUser> _userManager;
+//        private readonly SignInManager<ApplicationUser> _signInManager;
+//        private readonly IEmailSender _emailSender;
+//        private readonly ILogger _logger;
+//
+//        public AccountController(
+//            UserManager<ApplicationUser> userManager,
+//            SignInManager<ApplicationUser> signInManager,
+//            IEmailSender emailSender,
+//            ILogger<AccountController> logger)
+//        {
+//            _userManager = userManager;
+//            _signInManager = signInManager;
+//            _emailSender = emailSender;
+//            _logger = logger;
+//        }
 
         [TempData]
         public string ErrorMessage { get; set; }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(string returnUrl = null)
-        {
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+//        [HttpGet]
+//        [AllowAnonymous]
+//        public async Task<IActionResult> Login(string returnUrl = null)
+//        {
+//            // Clear the existing external cookie to ensure a clean login process
+//            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+//
+//            ViewData["ReturnUrl"] = returnUrl;
+//            return View();
+//        }
 
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User logged in.");
-                    return RedirectToLocal(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToAction(nameof(Lockout));
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
-                }
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
+//        [HttpPost]
+//        [AllowAnonymous]
+//        [ValidateAntiForgeryToken]
+//        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+//        {
+//            ViewData["ReturnUrl"] = returnUrl;
+//            if (ModelState.IsValid)
+//            {
+//                // This doesn't count login failures towards account lockout
+//                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+//                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+//                if (result.Succeeded)
+//                {
+//                    _logger.LogInformation("User logged in.");
+//                    return RedirectToLocal(returnUrl);
+//                }
+//                if (result.RequiresTwoFactor)
+//                {
+//                    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
+//                }
+//                if (result.IsLockedOut)
+//                {
+//                    _logger.LogWarning("User account locked out.");
+//                    return RedirectToAction(nameof(Lockout));
+//                }
+//                else
+//                {
+//                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+//                    return View(model);
+//                }
+//            }
+//
+//            // If we got this far, something failed, redisplay form
+//            return View(model);
+//        }
 
         [HttpGet]
         [AllowAnonymous]
@@ -228,7 +227,7 @@ namespace IdentityServerAspWithNetIdentity.Controllers
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+//                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
@@ -250,16 +249,16 @@ namespace IdentityServerAspWithNetIdentity.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public IActionResult ExternalLogin(string provider, string returnUrl = null)
-        {
-            // Request a redirect to the external login provider.
-            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            return Challenge(properties, provider);
-        }
+//        [HttpPost]
+//        [AllowAnonymous]
+//        [ValidateAntiForgeryToken]
+//        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+//        {
+//            // Request a redirect to the external login provider.
+//            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
+//            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+//            return Challenge(properties, provider);
+//        }
 
         [HttpGet]
         [AllowAnonymous]
